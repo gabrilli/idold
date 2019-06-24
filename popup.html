@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<title>ID Digital</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/jsbarcode/3.6.0/JsBarcode.all.min.js"></script>
+
+
+</head>
+
+<body onload="getLocation()">
+<body onload = "pesquisar()">
+
+
+
+<h2>ID Digital</h2>
+<p>ID Digital criado na Blockchain da Ethereum</p>
+<p>Powered by Simões Advogados</p>
+
+<div>
+<h2>Nome: <span id = "formRegistro.Nome.value"></span></h2>
+<p>CPF: <span id = "formRegistro.CPF.value"></span></p>
+<p> Hash-ID: <span id = "resultado[2]"></span></p>    
+<p>Geolocalização de Criação: <span id="geo"></span></p>
+
+<div>
+  
+  <onblur="GerarCódigoDeBarras1(this)"/>
+</div>
+<svg id="codBarras1"></svg>
+
+<div>
+  
+  <onblur="GerarCódigoDeBarras2(this)"/>
+</div>
+<svg id="codBarras2"></svg>
+
+
+<p>Timestamp de Criação: <span id="#resultadoPesquisa[3]"></span></p>
+<p>Bloco de Criação: <span id="#resultadoPesquisa[4]"></span></p>
+</div>
+
+
+</body>
+
+
+
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="connectToSmartContract.js"></script>
+    <script src="abi.js"></script>
+
+    <script>
+    var geo = document.getElementById("geo");
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        geo.innerHTML = "Geolocation is not supported by this browser.";
+      }
+    }
+        
+    function showPosition(position) {
+      geo.innerHTML = "Latitude: " + position.coords.latitude + 
+      "<br>Longitude: " + position.coords.longitude; 
+      JsBarcode('#codBarras1', position.coords.latitude)
+      JsBarcode('#codBarras2', position.coords.longitude)
+    }
+    
+    var frm2 = document.formRegistro;
+        function pesquisar () {
+            event.preventDefault();
+            $("#resultadoPesquisa").html("");
+            contract.procurarporcpf (frm2.CPF.value, function (erro, resultado) {
+                if (erro) {
+                    console.log("pesquisarcliente");
+                    console.error(erro);
+                    alert("Houve um erro ao pesquisar o nome do cliente");
+                    //frmPesquisa.matricula.value = "";
+                    return
+                }
+                $("#resultadoPesquisa").html ("O proprietário do imóvel informado é: " + resultado);
+            })
+        }
+        //function procurarporcpf (uint CPF) public view returns (string memory Nome, uint Celular, bytes32 Idetificador, uint Timestamp, uint Bloco) {    
+    
+
+</script>
+
+
+
+</html>
